@@ -1,6 +1,8 @@
+const pokeService = require("../services/pokemonService");
+
 const pokemonController = {
   getPokemon: (req, res) => {
-    res.send("getPokemon VIP");
+    res.send(pokeService.getPokemon());
   },
   getPokemonById: (req, res) => {
     const { id } = req.params;
@@ -8,6 +10,7 @@ const pokemonController = {
   },
   getPokemonInfoById: (req, res) => {
     const { id, info } = req.params;
+
     res.send("getPokemonInfoByID VIP " + id + " " + info);
   },
 };
