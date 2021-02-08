@@ -6,10 +6,10 @@ const pokemonService = {
     return pokemonList;
   },
   getPokemonById: (id) => {
-    return [];
+    return pokemonList[id];
   },
   getPokemonInfoById: (id, info) => {
-    return [];
+    return pokemonList[id][info];
   },
 };
 module.exports = pokemonService;
