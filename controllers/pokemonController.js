@@ -1,17 +1,28 @@
 const pokeService = require("../services/pokemonService");
 
 const pokemonController = {
-  getPokemon: (req, res) => {
-    res.send(pokeService.getPokemon());
+  getPokemon: (_, res) => {
+    res.json({
+      code: 200,
+      message: "successfully fetched all pokemon",
+      data: pokeService.getPokemon(),
+    });
   },
   getPokemonById: (req, res) => {
     const { id } = req.params;
-    res.send(pokeService.getPokemonById(id));
+    res.json({
+      code: 200,
+      message: "successfully fetched pokemon by id",
+      data: pokeService.getPokemonById(id),
+    });
   },
   getPokemonInfoById: (req, res) => {
     const { id, info } = req.params;
-
-    res.send(pokeService.getPokemonInfoById(id, info));
+    res.json({
+      code: 200,
+      message: "successfully fetch pokemon-info by pokemon id",
+      data: pokeService.getPokemonInfoById(id, info),
+    });
   },
 };
 module.exports = pokemonController;
