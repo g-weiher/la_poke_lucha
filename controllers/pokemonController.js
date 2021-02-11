@@ -1,28 +1,53 @@
 const pokeService = require("../services/pokemonService");
 
 const pokemonController = {
-  getPokemon: (_, res) => {
-    res.json({
-      code: 200,
-      message: "successfully fetched all pokemon",
-      data: pokeService.getPokemon(),
-    });
+  getPokemon: async (_, res) => {
+    try {
+      res.json({
+        code: 200,
+        message: "successfully fetched all pokemon",
+        data: await pokeService.getPokemon(),
+      });
+    } catch(e) {
+      console.error(e);
+      res.json({
+        code: 500,
+        message: "unexpected server error",
+      });
+    }
+    
   },
-  getPokemonById: (req, res) => {
+  getPokemonById: async (req, res) => {
     const { id } = req.params;
-    res.json({
-      code: 200,
-      message: "successfully fetched pokemon by id",
-      data: pokeService.getPokemonById(id),
-    });
+    try {
+      res.json({
+        code: 200,
+        message: "successfully fetched pokemon by id",
+        data: await pokeService.getPokemonById(id),
+      });
+    } catch (e) {
+      console.error(e);
+      res.json({
+        code: 500,
+        message: "unexpected server error",
+      });
+    }
   },
-  getPokemonInfoById: (req, res) => {
+  getPokemonInfoById: async (req, res) => {
     const { id, info } = req.params;
-    res.json({
-      code: 200,
-      message: "successfully fetch pokemon-info by pokemon id",
-      data: pokeService.getPokemonInfoById(id, info),
-    });
+    try {
+      res.json({
+        code: 200,
+        message: "successfully fetch pokemon-info by pokemon id",
+        data: await pokeService.getPokemonInfoById(id, info),
+      });
+    } catch (e) {
+      console.error(e);
+      res.json({
+        code: 500,
+        message: "unexpected server error",
+      });
+    }
   },
 };
 module.exports = pokemonController;
