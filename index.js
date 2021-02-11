@@ -5,6 +5,11 @@ var app = express();
 const dotenv = require("dotenv");
 dotenv.config();
 
+// body-parser setup
+let bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 //mongoose setup
 
 const dbPw = process.env.DBPW;
