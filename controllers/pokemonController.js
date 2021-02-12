@@ -1,4 +1,7 @@
 const pokeService = require("../services/pokemonService");
+const Game = require("../models/Game");
+const Pokemon = require("../models/Pokemon");
+
 
 const pokemonController = {
   getPokemon: async (_, res) => {
@@ -15,7 +18,7 @@ const pokemonController = {
         message: "unexpected server error",
       });
     }
-    
+
   },
   getPokemonById: async (req, res) => {
     const { id } = req.params;
@@ -49,5 +52,29 @@ const pokemonController = {
       });
     }
   },
+  insertGame: async (req, res) => {
+    const { winner, looser, turns } = req.body;
+    try {
+      await Game.create({
+        winner,
+        looser,
+        turns,
+      });
+      res.json({
+        code: 200,
+        message: "Game History has be saved successfully",
+      });
+    } catch (e) {
+      console.log(Error(e));
+      res.status(500).json({
+        code: 500,
+        message: "Internal mongodb error",
+      });
+    }
+  },
+  getPokemonDB: async (_, res) => {
+    const dbRes = await Pokemon.find({});
+    res.json(dbRes);
+}
 };
 module.exports = pokemonController;
