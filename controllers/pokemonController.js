@@ -1,5 +1,6 @@
 const pokeService = require("../services/pokemonService");
 const Game = require("../models/Game");
+const Pokemon = require("../models/Pokemon");
 
 
 const pokemonController = {
@@ -71,5 +72,9 @@ const pokemonController = {
       });
     }
   },
+  getPokemonDB: async (_, res) => {
+    const dbRes = await Pokemon.find({});
+    res.json(dbRes);
+}
 };
 module.exports = pokemonController;
