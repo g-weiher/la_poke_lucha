@@ -4,21 +4,25 @@ const Pokemon = require("../models/Pokemon");
 
 
 const pokemonController = {
-  getPokemon: async (_, res) => {
+  getPokemon: async (req, res) => {
+    const { limit, offset } = req.query;
+    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    console.log(fullUrl)
     try {
+      const pokemon = await pokeService.getPokemon(+limit, +offset);
       res.json({
         code: 200,
         message: "successfully fetched all pokemon",
-        data: await pokeService.getPokemon(),
+        data: pokemon,
+        next : !pokemon.length<limit ? `${fullUrl}?limit=${limit}&offset=${offset+limit}` : null,
       });
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       res.json({
         code: 500,
         message: "unexpected server error",
       });
     }
-
   },
   getPokemonById: async (req, res) => {
     const { id } = req.params;
@@ -75,6 +79,6 @@ const pokemonController = {
   getPokemonDB: async (_, res) => {
     const dbRes = await Pokemon.find({});
     res.json(dbRes);
-}
+  },
 };
 module.exports = pokemonController;
