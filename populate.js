@@ -4,8 +4,8 @@ var cors = require("cors");
 const Pokemon = require("./models/Pokemon");
 
 //longjohn https://github.com/mattinsler/longjohn
-if (process.env.NODE_ENV !== 'production'){
-  require('longjohn');
+if (process.env.NODE_ENV !== "production") {
+  require("longjohn");
 }
 
 // import provided pokemonlist.json
@@ -13,7 +13,6 @@ let pokemonList = require("./services/pokedex.json");
 
 //axios
 const axios = require("axios");
-
 
 //dotenv
 const dotenv = require("dotenv");
@@ -26,21 +25,18 @@ mongoose.Promise = Promise; // Set mongoose to use ES6 Promises.
 const dbPw = process.env.DBPW;
 const dbUser = process.env.DBUSER;
 
-const mongoDB = `mongodb+srv://${dbUser}:${dbPw}@cluster0.boikv.mongodb.net/pokemonDB?retryWrites=true&w=majority`;
+const mongoDB = `mongodb+srv://${dbUser}:${dbPw}@sandbox.ousxb.mongodb.net/Pokemon?retryWrites=true&w=majority`;
 const dbOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
 
+console.log("connecting mongoose");
 mongoose.connect(mongoDB, dbOptions);
-
 const db = mongoose.connection;
+console.log("mongoose connected");
 //Bind connection to error event (to get notification of connection errors)
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
-
-app.listen(3001, () => {
-  console.log(`Example app listening at http://localhost:3001`);
-});
 
 let pokemons = [
   {
@@ -729,31 +725,33 @@ let pokemons = [
   },
 ];
 
-let results = pokemons.map((pokemon) => {
-  return axios.get("https://pokeapi.co/api/v2/pokemon/" + pokemon.id);
-
-});
-
 const populateDB = async () => {
-
-  const res = await Promise.all(results);
-  console.log(res);
-  pokemons = pokemons.map((pokemonFromDB) => {
-    res.forEach((pokemonFromAxios) => {
-      if (pokemonFromDB.id == pokemonFromAxios.data.id)
-        pokemonFromDB.image = pokemonFromAxios.data.sprites.back_default;
+  try {
+    console.log("fetching pokemon  from pokeapi...");
+    let results = pokemons.map((pokemon) => {
+      return axios.get("https://pokeapi.co/api/v2/pokemon/" + pokemon.id);
+    });
+    const res = await Promise.all(results);
+    console.log("number of pokemon fetched: "   + res.length);
+    pokemons = pokemons.map((pokemonFromDB) => {
+      res.forEach((pokemonFromAxios) => {
+        if (pokemonFromDB.id == pokemonFromAxios.data.id)
+          pokemonFromDB.image = pokemonFromAxios.data.sprites.back_default;
         pokemonFromDB.weight = pokemonFromAxios.data.weight;
         pokemonFromDB.base_experience = pokemonFromAxios.data.base_experience;
         // todo other properties
       });
-    return pokemonFromDB;
-  });
-
-
-  //
-  Pokemon.insertMany(pokemons);
-
-
+      return pokemonFromDB;
+    });
+    console.log("inserting into db");
+    await Pokemon.insertMany(pokemons);
+    console.log("done");
+  } catch (e) {
+    console.error(e);
+  } finally {
+    console.log("disconnecting mongoose");
+    mongoose.connection.close();
+  }
 };
 
 populateDB();
