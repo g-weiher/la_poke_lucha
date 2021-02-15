@@ -14,6 +14,7 @@ const pokemonSchema = new Schema({
     Speed: Number,
   },
   image: String,
+  image_small: String,
   weight: Number,
   base_experience: Number,
 });
