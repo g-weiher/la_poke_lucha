@@ -12,8 +12,7 @@ app.use(bodyParser.json());
 
 //mongoose setup
 
-const dbPw = process.env.DBPW;
-const dbUser = process.env.DBUSER;
+const { DBPW, DBUSER, DBHOST, DBNAME } = process.env;
 
 const mongoose = require("mongoose");
 const mongoDB = `mongodb+srv://${DBUSER}:${DBPW}@${DBHOST}/${DBNAME}?retryWrites=true&w=majority`;
