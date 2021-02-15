@@ -32,10 +32,9 @@ const pokemonController = {
         data: pokemon,
         next:
           limit && !(pokemon.length < limit)
-            ? `${fullUrl}?limit=${limit}&offset=${offset + limit}${
+            ? `${fullUrl}?limit=${limit}&offset=${offset + limit}` +
               (type ? `&type=${type}`:"") + 
               (name ? `&name=${name}`:"")
-            }`
             : null,
       });
     } catch (e) {
