@@ -9,8 +9,6 @@ const pokemonSchema = new Schema({
   image: String,
   weight: Number,
   base_experience: Number
-
-
 });
 
 module.exports = mongoose.model("Pokemon", pokemonSchema);
