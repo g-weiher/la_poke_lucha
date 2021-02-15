@@ -12,6 +12,9 @@ const pokemonService = {
   },
   getPokemonInfoById: async (id, info) => {
     const pokemon = await Pokemon.findOne({ id: id });
+    if (!pokemon) {
+      return null;
+    }
     const pokeInfo = pokemon[info];
     if (info === "type") {
       //for every type of the pokemon create an axios request, bundle them with Promise.all and resolve them all

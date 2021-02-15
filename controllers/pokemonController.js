@@ -29,11 +29,26 @@ const pokemonController = {
   },
   getPokemonById: async (req, res) => {
     const { id } = req.params;
+    if (!/^\d+$/.test(id)) {
+      res.status(400).json({
+        code: 400,
+        message: id + " is not a valid ID",
+      });
+      return;
+    }
     try {
+      const pokemon = await pokeService.getPokemonById(id);
+      if (!pokemon) {
+        res.json({
+          code: 404,
+          message: "no pokemon found",
+        });
+        return;
+      }
       res.json({
         code: 200,
         message: "successfully fetched pokemon by id",
-        data: await pokeService.getPokemonById(id),
+        data: pokemon,
       });
     } catch (e) {
       console.error(e);
@@ -45,11 +60,34 @@ const pokemonController = {
   },
   getPokemonInfoById: async (req, res) => {
     const { id, info } = req.params;
+    //validation
+    if (!/^\d+$/.test(id)) {
+      res.status(400).json({
+        code: 400,
+        message: id + " is not a valid ID",
+      });
+      return;
+    }
+    if (!["type", "base", "name"].includes(info)) {
+      res.status(400).json({
+        code: 400,
+        message: info + " is not a valid Info id",
+      });
+      return;
+    }
     try {
+      const pokemon = await pokeService.getPokemonInfoById(id, info);
+      if (!pokemon) {
+        res.json({
+          code: 404,
+          message: "no pokemon found",
+        });
+        return;
+      }
       res.json({
         code: 200,
         message: "successfully fetch pokemon-info by pokemon id",
-        data: await pokeService.getPokemonInfoById(id, info),
+        data: pokemon,
       });
     } catch (e) {
       console.error(e);
