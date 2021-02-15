@@ -16,7 +16,7 @@ const dbPw = process.env.DBPW;
 const dbUser = process.env.DBUSER;
 
 const mongoose = require("mongoose");
-const mongoDB = `mongodb+srv://${dbUser}:${dbPw}@cluster0.boikv.mongodb.net/pokemonDB?retryWrites=true&w=majority`;
+const mongoDB = `mongodb+srv://${DBUSER}:${DBPW}@${DBHOST}/${DBNAME}?retryWrites=true&w=majority`;
 mongoose.connect(mongoDB, {useNewUrlParser: true});
 
 const db = mongoose.connection;
