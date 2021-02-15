@@ -27,6 +27,10 @@ const dbOptions = {
 
 pokemons = require("./services/pokedex.json");
 
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 const populateDB = async () => {
   try {
     
@@ -40,18 +44,25 @@ const populateDB = async () => {
         pokemonList
           .slice(
             i,
-            i + batchSize <= pokemonList.length ? i + batchSize : pokemonList.length
+            i + batchSize <= pokemonList.length
+              ? i + batchSize
+              : pokemonList.length
           )
           .map((pokemon) => {
             //workaround for pokeapi bug: id 477 and 519 are not found
-            if([477, 519].includes(pokemon.id)) {        
-              return axios.get("https://pokeapi.co/api/v2/pokemon/" + pokemon.name.english.toLowerCase())
-            };
+            if ([477, 519].includes(pokemon.id)) {
+              return axios.get(
+                "https://pokeapi.co/api/v2/pokemon/" +
+                  pokemon.name.english.toLowerCase()
+              );
+            }
             return axios.get("https://pokeapi.co/api/v2/pokemon/" + pokemon.id);
           })
       );
-      console.log(i);
       res.push(...batch);
+      //small delay before next batch to prevent DOS attack prevention from triggering
+      await sleep(1000);
+      console.log(i);
     }
     console.log("number of pokemon fetched: " + res.length);
 
