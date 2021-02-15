@@ -1,6 +1,5 @@
 const pokeService = require("../services/pokemonService");
 const Game = require("../models/Game");
-const Pokemon = require("../models/Pokemon");
 
 
 const pokemonController = {
@@ -11,14 +10,13 @@ const pokemonController = {
         message: "successfully fetched all pokemon",
         data: await pokeService.getPokemon(),
       });
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       res.json({
         code: 500,
         message: "unexpected server error",
       });
     }
-
   },
   getPokemonById: async (req, res) => {
     const { id } = req.params;
@@ -72,9 +70,5 @@ const pokemonController = {
       });
     }
   },
-  getPokemonDB: async (_, res) => {
-    const dbRes = await Pokemon.find({});
-    res.json(dbRes);
-}
 };
 module.exports = pokemonController;

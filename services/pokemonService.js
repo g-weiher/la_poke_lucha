@@ -1,28 +1,17 @@
-const pokemonList = require("./pokedex.json");
+const Game = require("../models/Game");
+const Pokemon = require("../models/Pokemon");
 const axios = require("axios");
 
 const pokemonService = {
   getPokemon: () => {
     //TODO pagination, 
-    return pokemonList;
+    return Pokemon.find();
   },
   getPokemonById: async (id) => {
-    //request the specified pokemon
-    const response = await axios.get(
-      `https://pokeapi.co/api/v2/pokemon/${id}`
-    );
-    const { weight, sprites, order } = response.data;
-    //we need to subtract 1 from the id to get the array index
-    const pokemon = {
-      ...pokemonList[id-1],
-      weight,
-      picture: sprites.other["official-artwork"].front_default,
-      order,
-    };
-    return pokemon;
+    return Pokemon.find(id);
   },
   getPokemonInfoById: async (id, info) => {
-    const pokeInfo = pokemonList[id][info]
+    const pokeInfo = Pokemon.find(id)[info];
     if(info === "type") {
       //for every type of the pokemon create an axios request, bundle them with Promise.all and resolve them all
       const typesResponses = await Promise.all(pokeInfo.map(type => axios.get(`https://pokeapi.co/api/v2/type/${type.toLowerCase()}`)))
