@@ -1,17 +1,20 @@
+const axios = require("axios");
 const Game = require("../models/Game");
 const Pokemon = require("../models/Pokemon");
-const axios = require("axios");
 
 const pokemonService = {
-  getPokemon: async () => {
-    //TODO pagination,
-    return await Pokemon.find();
+  getPokemon: async (limit, offset) => {
+    const dbRes = await Pokemon.find({}).limit(limit).skip(offset);
+    return dbRes;
   },
   getPokemonById: async (id) => {
     return await Pokemon.findOne({ id: id });
   },
   getPokemonInfoById: async (id, info) => {
     const pokemon = await Pokemon.findOne({ id: id });
+    if (!pokemon) {
+      return null;
+    }
     const pokeInfo = pokemon[info];
     if (info === "type") {
       //for every type of the pokemon create an axios request, bundle them with Promise.all and resolve them all
