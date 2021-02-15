@@ -71,6 +71,8 @@ const populateDB = async () => {
       res.forEach((pokemonFromAxios) => {
         if (pokemonFromDB.id == pokemonFromAxios.data.id) {
           pokemonFromDB.image = pokemonFromAxios.data.sprites.other["official-artwork"].front_default;
+          pokemonFromDB.image_small =
+            pokemonFromAxios.data.sprites.front_default;
           pokemonFromDB.weight = pokemonFromAxios.data.weight;
           pokemonFromDB.base_experience = pokemonFromAxios.data.base_experience;
           // mongodb doesn't allow dots in keys

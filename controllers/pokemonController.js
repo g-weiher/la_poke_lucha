@@ -6,17 +6,35 @@ const pokemonController = {
   getPokemon: async (req, res) => {
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
     const offset = req.query.offset ? parseInt(req.query.offset) : 0;
+    const type = req.query.type;
+    const name = req.query.name;
     var fullUrl = req.protocol + "://" + req.get("host") + req.baseUrl;
+
     try {
-      const pokemon = await pokeService.getPokemon(limit, offset);
-      console.log();
+      let pokemon;
+      if (type) {
+        pokemon = await pokeService.getPokemonByType(limit, offset, type, name);
+      } else {
+        pokemon = await pokeService.getPokemon(limit, offset, name);
+      }
+      if (pokemon.length === 0) {
+        res.json({
+          code: 404,
+          message: "nothing found",
+          data: [],
+          next: null,
+        });
+        return;
+      }
       res.json({
         code: 200,
         message: "successfully fetched all pokemon",
         data: pokemon,
         next:
           limit && !(pokemon.length < limit)
-            ? `${fullUrl}?limit=${limit}&offset=${offset + limit}`
+            ? `${fullUrl}?limit=${limit}&offset=${offset + limit}` +
+              (type ? `&type=${type}`:"") + 
+              (name ? `&name=${name}`:"")
             : null,
       });
     } catch (e) {
