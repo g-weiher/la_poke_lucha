@@ -4,16 +4,20 @@ const Game = require("../models/Game");
 
 const pokemonController = {
   getPokemon: async (req, res) => {
-    const { limit, offset } = req.query;
-    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-    console.log(fullUrl)
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const offset = req.query.offset ? parseInt(req.query.offset) : 0;
+    var fullUrl = req.protocol + "://" + req.get("host") + req.baseUrl;
     try {
-      const pokemon = await pokeService.getPokemon(+limit, +offset);
+      const pokemon = await pokeService.getPokemon(limit, offset);
+      console.log();
       res.json({
         code: 200,
         message: "successfully fetched all pokemon",
         data: pokemon,
-        next : !pokemon.length<limit ? `${fullUrl}?limit=${limit}&offset=${offset+limit}` : null,
+        next:
+          limit && !(pokemon.length < limit)
+            ? `${fullUrl}?limit=${limit}&offset=${offset + limit}`
+            : null,
       });
     } catch (e) {
       console.error(e);
