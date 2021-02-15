@@ -3,8 +3,21 @@ const Game = require("../models/Game");
 const Pokemon = require("../models/Pokemon");
 
 const pokemonService = {
-  getPokemon: async (limit, offset) => {
-    const dbRes = await Pokemon.find({}).limit(limit).skip(offset);
+  getPokemon: async (limit, offset, nameFilter = "") => {
+    const dbRes = await Pokemon.find({
+      "name.english": { $regex: `.*${nameFilter}.*`, $options: "i" },
+    })
+      .limit(limit)
+      .skip(offset);
+    return dbRes;
+  },
+  getPokemonByType: async (limit, offset, type, nameFilter = "") => {
+    const dbRes = await Pokemon.find({
+      "name.english": { $regex: `.*${nameFilter}.*`, $options: "i" },
+      type: { $elemMatch: { $regex: type, $options: "i" } },
+    })
+      .limit(limit)
+      .skip(offset);
     return dbRes;
   },
   getPokemonById: async (id) => {
