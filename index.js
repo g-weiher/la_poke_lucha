@@ -23,6 +23,7 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 const pokemonRoute = require("./routes/pokemon");
+const gameRoute = require("./routes/game");
 
 const port = process.env.PORT;
 
@@ -31,6 +32,7 @@ app.options("*", cors()); // include before other routes
 app.use(cors());
 
 app.use("/pokemon", pokemonRoute);
+app.use("/game", gameRoute);
 app.get("/", (req, res) => {
   res.send("Bienvenides to our Poke Lucha");
 });
