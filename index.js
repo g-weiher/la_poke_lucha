@@ -24,6 +24,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 const pokemonRoute = require("./routes/pokemon");
 const gameRoute = require("./routes/game");
+const typeRoute = require("./routes/types");
 
 const port = process.env.PORT;
 
@@ -33,6 +34,8 @@ app.use(cors());
 
 app.use("/pokemon", pokemonRoute);
 app.use("/game", gameRoute);
+app.use("/types", typeRoute);
+
 app.get("/", (req, res) => {
   res.send("Bienvenides to our Poke Lucha");
 });
