@@ -20,7 +20,7 @@ const gameController = {
       console.log(Error(e));
       res.status(500).json({
         code: 500,
-        message: "Internal mongodb error",
+        message: e.message,
       });
     }
   },
@@ -29,7 +29,7 @@ const gameController = {
       res.json({
         code: 200,
         message: "successfully fetched all games",
-        data: await Game.find({}),
+        data: await Game.find({}).populate("winner").populate("looser"),
       });
     } catch (e) {
       console.error(e);
