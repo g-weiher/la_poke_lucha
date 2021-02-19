@@ -21,7 +21,13 @@ const pokemonService = {
     return dbRes;
   },
   getPokemonById: async (id) => {
-    return await Pokemon.findOne({ id: id });
+    const pokemon = await Pokemon.findOne({ id: id });
+    if (pokemon) {
+      pokemon.type = await Promise.all(
+        pokemon.type.map((type) => Type.findOne({ name: type.toLowerCase() }))
+      );
+    }
+    return pokemon;
   },
   getPokemonInfoById: async (id, info) => {
     const pokemon = await Pokemon.findOne({ id: id });
